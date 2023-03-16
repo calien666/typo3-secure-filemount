@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="" datatype="plaintext"
+		  original="messages" date="2023-03-16T22:54:24Z">
+		<header>
+			<generator>OwnScript</generator>
+		</header>
+		<body>
+			<trans-unit id="backend.edit.access">
+				<source>Edit access rights</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -6,3 +6,8 @@ services:
 
   Calien\SecureFilemount\:
     resource: '../Classes/*'
+
+  Calien\SecureFilemount\EventListener\ModifyResourceIcon:
+    tags:
+      - name: event.listener
+        event: TYPO3\CMS\Core\Imaging\Event\ModifyIconForResourcePropertiesEvent
