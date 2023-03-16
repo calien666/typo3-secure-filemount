@@ -1,0 +1,30 @@
+{
+  "name": "calien666/secure-filemount",
+  "description": "Login secured filemount for internal pages",
+  "license": ["GPL-2.0-or-later"],
+  "keywords": ["TYPO3 CMS"],
+  "version": "1.0.0",
+  "type": "typo3-cms-extension",
+  "authors": [
+    {
+      "name": "Markus Hofmann",
+      "role": "Developer",
+      "email": "typo3@calien.de"
+    }
+  ],
+  "require": {
+    "php": ">=7.4 || >= 8.0",
+    "typo3/cms-core": "^11.5 || ^12.2",
+    "typo3/cms-filelist": "^11.5 || ^12.2"
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "secure_filemount"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Calien\\SecureFilemount\\": "Classes/"
+    }
+  }
+}
