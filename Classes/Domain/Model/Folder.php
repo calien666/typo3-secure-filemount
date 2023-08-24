@@ -17,6 +17,9 @@ class Folder
 
     protected ResourceStorage $storage;
 
+    /**
+     * @var int[]
+     */
     protected array $feGroup = [];
 
     public function __construct(
@@ -24,13 +27,13 @@ class Folder
         string $folder,
         string $folderHash,
         ResourceStorage $storage,
-        string $feGroup = ''
+        ?string $feGroup = null
     ) {
         $this->uid = $uid;
         $this->folder = $folder;
         $this->folderHash = $folderHash;
         $this->storage = $storage;
-        $this->feGroup = GeneralUtility::intExplode(',', $feGroup);
+        $this->feGroup = $feGroup ? GeneralUtility::intExplode(',', $feGroup) : [];
     }
 
     public function getUid(): int
@@ -53,10 +56,15 @@ class Folder
     }
 
     /**
-     * @return array<int, int>
+     * @return int[]
      */
     public function getFeGroup(): array
     {
         return $this->feGroup;
+    }
+
+    public function hasAccessDefined(): bool
+    {
+        return count($this->feGroup) > 0;
     }
 }
