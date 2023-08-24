@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Calien\SecureFilemount\Service;
 
+use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Context\UserAspect;
@@ -34,6 +35,7 @@ class AccessService
      * @param ResourceStorage $storage
      * @return bool
      * @throws AspectNotFoundException
+     * @throws Exception
      */
     public static function checkStorageAccess(ResourceStorage $storage): bool
     {
