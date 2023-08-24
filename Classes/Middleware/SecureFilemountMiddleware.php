@@ -44,7 +44,7 @@ class SecureFilemountMiddleware implements MiddlewareInterface
         $searchBasePath = array_shift($pathArray);
         foreach ($storages as $storage) {
             $conf = $storage->getConfiguration();
-            $basePath = trim($conf['basePath'], '/');
+            $basePath = trim($conf['baseUri'], '/');
             if ($searchBasePath === $basePath) {
                 $foundStorage = $storage;
             }
@@ -58,7 +58,7 @@ class SecureFilemountMiddleware implements MiddlewareInterface
                 );
             }
 
-            $identifier = substr($path->getUri()->getPath(), strlen($foundStorage->getConfiguration()['basePath']));
+            $identifier = substr($path->getUri()->getPath(), strlen($foundStorage->getConfiguration()['baseUri']));
             $file = $foundStorage->getFile($identifier);
             $stream = new Stream($file->getForLocalProcessing());
             $mime = $file->getMimeType();

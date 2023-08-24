@@ -11,3 +11,8 @@ services:
     tags:
       - name: event.listener
         event: TYPO3\CMS\Core\Imaging\Event\ModifyIconForResourcePropertiesEvent
+
+  Calien\SecureFilemount\EventListener\GeneratePublicUrlForSecureFilemount:
+    tags:
+      - name: event.listener
+        event: TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent
