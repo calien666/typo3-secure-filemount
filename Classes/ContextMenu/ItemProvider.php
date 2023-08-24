@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Calien\SecureFilemount\ContextMenu;
 
 use Calien\SecureFilemount\Domain\Repository\FolderRepository;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
+use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\FolderInterface;
@@ -21,15 +24,15 @@ class ItemProvider extends AbstractProvider
     /**
      * @var array<string, mixed>
      */
-    protected array $addItemsConfiguration = [
+    protected array $addItemConfiguration = [
         'permissions_divider' => [
             'type' => 'divider',
         ],
         'permissions' => [
-            'label' => 'LLL:EXT:fal_securedownload/Resources/Private/Language/locallang_be.xlf:clickmenu.folderpermissions',
+            'label' => 'LLL:EXT:secure_filemount/Resources/Private/Language/locallang.xlf:backend.edit.access',
             'iconIdentifier' => 'actions-lock',
-            'callbackAction' => 'editRecord'
-        ]
+            'callbackAction' => 'editRecord',
+        ],
     ];
 
     /**
@@ -48,7 +51,7 @@ class ItemProvider extends AbstractProvider
         // add own items to the default
         $this->itemsConfiguration = array_merge_recursive(
             $this->itemsConfiguration,
-            $this->addItemsConfiguration
+            $this->addItemConfiguration
         );
     }
 
@@ -65,7 +68,7 @@ class ItemProvider extends AbstractProvider
     /**
      * @throws ResourceDoesNotExistException
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         parent::initialize();
         $resource = $this->resourceFactory
@@ -83,14 +86,26 @@ class ItemProvider extends AbstractProvider
         }
     }
 
+    /**
+     * @return array{
+     *     data-callback-module: string,
+     *     data-folder-record-uid: int,
+     *     data-storage: int,
+     *     data-folder: string,
+     *     data-folder-hash: string
+     *     }
+     * @throws InsufficientFolderAccessPermissionsException
+     * @throws Exception
+     * @throws DBALException
+     */
     protected function getAdditionalAttributes(string $itemName): array
     {
         $utility = GeneralUtility::makeInstance(FolderRepository::class);
         $folderRecord = $utility->getFolder($this->folder);
 
         return [
-            'data-callback-module' => 'TYPO3/CMS/FalSecuredownload/ContextMenuActions',
-            'data-folder-record-uid' => $folderRecord->getUid() ?? 0,
+            'data-callback-module' => 'TYPO3/CMS/SecureFilemount/ContextMenuActions',
+            'data-folder-record-uid' => $folderRecord ? $folderRecord->getUid() : 0,
             'data-storage' => $this->folder->getStorage()->getUid(),
             'data-folder' => $this->folder->getIdentifier(),
             'data-folder-hash' => $this->folder->getHashedIdentifier(),
