@@ -16,6 +16,7 @@ use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Routing\SiteRouteResult;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 class SecureFilemountMiddleware implements MiddlewareInterface
@@ -50,15 +51,14 @@ class SecureFilemountMiddleware implements MiddlewareInterface
             }
         }
         if (!is_null($foundStorage)) {
-            $accessGranted = AccessService::checkStorageAccess($foundStorage);
+            $identifier = substr($path->getUri()->getPath(), strlen($foundStorage->getConfiguration()['baseUri']));
+            $accessGranted = AccessService::checkResourceAccess($foundStorage, $identifier);
             if (!$accessGranted) {
                 return GeneralUtility::makeInstance(ErrorController::class)->accessDeniedAction(
                     $request,
                     'You are not allowed to enter this content.'
                 );
             }
-
-            $identifier = substr($path->getUri()->getPath(), strlen($foundStorage->getConfiguration()['baseUri']));
             $file = $foundStorage->getFile($identifier);
             $stream = new Stream($file->getForLocalProcessing());
             $mime = $file->getMimeType();
