@@ -8,9 +8,11 @@
 		<body>
 			<trans-unit id="backend.edit.access">
 				<source>Edit access rights</source>
+				<target>Zugriff editieren</target>
 			</trans-unit>
 			<trans-unit id="folder">
 				<source>Folder Access Right</source>
+				<target>Ordner Zugriff</target>
 			</trans-unit>
 		</body>
 	</file>

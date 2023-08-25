@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:secure_filemount/Resources/Private/Language/locallang_tca.xlf:folder',
+        'title' => 'LLL:EXT:secure_filemount/Resources/Private/Language/locallang.xlf:folder',
         'label' => 'folder',
         'iconfile' => 'EXT:secure_filemount/Resources/Public/Icons/Extension.svg',
         'tstamp' => 'tstamp',
@@ -19,12 +19,12 @@ return [
             'ignoreRootLevelRestriction' => true,
         ],
         'versioningWS' => false,
-        'searchFields' => ''
+        'searchFields' => '',
     ],
     'inferface' => [
         'showRecordFieldList' => '',
         'maxDBListItems' => 20,
-        'maxSingleDBListItems' => 100
+        'maxSingleDBListItems' => 100,
     ],
     'types' => [
         '0' => ['showitem' => 'fe_group,--palette--;;filePalette'],
@@ -33,8 +33,8 @@ return [
         // File palette, hidden but needs to be included all the time
         'filePalette' => [
             'showitem' => 'storage,folder,folder_hash',
-            'isHiddenPalette' => true
-        ]
+            'isHiddenPalette' => true,
+        ],
     ],
     'columns' => [
         'storage' => [
@@ -44,8 +44,8 @@ return [
                 'size' => 1,
                 'maxitems' => 1,
                 'minitems' => 1,
-                'allowed' => 'sys_file_storage'
-            ]
+                'allowed' => 'sys_file_storage',
+            ],
         ],
         'folder' => [
             'label' => 'LLL:EXT:secure_filemount/Resources/Private/Language/locallang.xlf:folder.folder',
@@ -59,8 +59,8 @@ return [
             'config' => [
                 'type' => 'input',
 
-            ]
+            ],
         ],
         'fe_group' => $GLOBALS['TCA']['pages']['columns']['fe_group'],
-    ]
+    ],
 ];
