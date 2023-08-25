@@ -6,15 +6,14 @@ $EM_CONF[$_EXTKEY] = [
     'category' => 'templates',
     'autoload' => [
         'psr-4' => [
-            'Calien\\SecureFilemount\\' => 'Classes'
+            'Calien\\SecureFilemount\\' => 'Classes',
         ],
     ],
     'state' => 'stable',
     'uploadfolder' => 0,
     'createDirs' => '',
-    'clearCacheOnLoad' => 1,
-    'author' => 'reseen GmbH',
-    'author_email' => 'seen@reseen.de',
-    'author_company' => 'reseen GmbH',
+    'author' => 'Markus Hofmann',
+    'author_email' => 'typo3@calien.de',
+    'author_company' => '',
     'version' => '1.0.0',
 ];
