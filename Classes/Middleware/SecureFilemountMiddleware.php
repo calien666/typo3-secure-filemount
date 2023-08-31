@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Calien\SecureFilemount\Service\AccessService;
+use Calien\SecureFilemount\Service\FolderAccessService;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\Http\Response;
@@ -29,6 +29,14 @@ class SecureFilemountMiddleware implements MiddlewareInterface
         'css' => 'text/css',
     ];
 
+    protected FolderAccessService $accessService;
+
+    public function __construct(
+        FolderAccessService $accessService
+    ) {
+        $this->accessService = $accessService;
+    }
+
     /**
      * @inheritDoc
      * @throws AspectNotFoundException
@@ -36,7 +44,7 @@ class SecureFilemountMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $storages = AccessService::getProtectedFileStorages();
+        $storages = $this->accessService->getProtectedFileStorages();
         /** @var SiteRouteResult $path */
         $path = $request->getAttribute('routing');
         /** @var ResourceStorage $foundStorage */
@@ -52,7 +60,7 @@ class SecureFilemountMiddleware implements MiddlewareInterface
         }
         if (!is_null($foundStorage)) {
             $identifier = substr($path->getUri()->getPath(), strlen($foundStorage->getConfiguration()['baseUri']));
-            $accessGranted = AccessService::checkResourceAccess($foundStorage, $identifier);
+            $accessGranted = $this->accessService->checkResourceAccess($foundStorage, $identifier);
             if (!$accessGranted) {
                 return GeneralUtility::makeInstance(ErrorController::class)->accessDeniedAction(
                     $request,

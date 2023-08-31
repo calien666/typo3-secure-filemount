@@ -14,18 +14,34 @@ use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use function PHPUnit\Framework\countOf;
 
-class AccessService
+final class FolderAccessService
 {
+    protected FolderRepository $folderRepository;
+
+    protected StorageRepository $storageRepository;
+
+    protected Context $context;
+
+    public function __construct(
+        FolderRepository $folderRepository,
+        StorageRepository $storageRepository,
+        Context $context
+    ) {
+        $this->folderRepository = $folderRepository;
+        $this->storageRepository = $storageRepository;
+        $this->context = $context;
+    }
     /**
      * @return ResourceStorage[]
      */
-    public static function getProtectedFileStorages(): array
+    public function getProtectedFileStorages(): array
     {
         $foundStorages = [];
-        $storages = GeneralUtility::makeInstance(StorageRepository::class)->findAll();
+        $storages = $this->storageRepository->findAll();
         foreach ($storages as $storage) {
-            if ($storage->isOnline() && $storage->getStorageRecord()['fe_group'] != 0) {
+            if ($storage->isOnline() && $storage->getStorageRecord()['fe_groups'] != 0) {
                 $foundStorages[] = $storage;
             }
         }
@@ -36,19 +52,16 @@ class AccessService
     /**
      * @throws AspectNotFoundException
      */
-    public static function checkResourceAccess(ResourceStorage $storage, string $identifier): bool
+    public function checkResourceAccess(ResourceStorage $storage, string $identifier): bool
     {
         // if we have a backend call,
         // nevermind, as core does access control,
         // just pass it here
-        if (
-            GeneralUtility::makeInstance(Context::class)
-                ->getPropertyFromAspect('backend.user', 'isLoggedIn')
-        ) {
+        if ($this->context->getPropertyFromAspect('backend.user', 'isLoggedIn')) {
             return true;
         }
         /** @var UserAspect $feUser */
-        $feUser = GeneralUtility::makeInstance(Context::class)->getAspect('frontend.user');
+        $feUser = $this->context->getAspect('frontend.user');
         // early exit, if we don't have a frontend login
         if (!$feUser->isLoggedIn()) {
             return false;
@@ -59,22 +72,25 @@ class AccessService
         // folder access groups, if given
         // otherwise look into file storage
         $datasetGroupArray = $feUser->getGroupIds();
-        $folderAccess = self::findDirectoryAccess($storage, $identifier);
+        $folderAccess = $this->findDirectoryAccess($storage, $identifier);
         $storageRecord = $storage->getStorageRecord();
-        $groupArray = $folderAccess ? $folderAccess->getFeGroup() : GeneralUtility::intExplode(',', $storageRecord['fe_group']);
+        $groupArray = $folderAccess
+            ? $folderAccess->getFeGroups()
+            : GeneralUtility::intExplode(',', $storageRecord['fe_group']);
 
         // check if the user has a related group or enabled for every login
+        $groupArrayCount = count($groupArray);
         if (
-            in_array(-2, $groupArray) ||
-            count(array_diff($groupArray, $feUser->getGroupIds())) < count($groupArray) ||
-            count(array_diff($groupArray, $datasetGroupArray)) < count($groupArray)
+            in_array(-2, $groupArray, true) ||
+            count(array_diff($groupArray, $feUser->getGroupIds())) < $groupArrayCount ||
+            count(array_diff($groupArray, $datasetGroupArray)) < $groupArrayCount
         ) {
             return true;
         }
         return false;
     }
 
-    private static function findDirectoryAccess(ResourceStorage $storage, string $identifier): ?Folder
+    private function findDirectoryAccess(ResourceStorage $storage, string $identifier): ?Folder
     {
         // we're detecting file
         // to identify possible processed
@@ -92,8 +108,7 @@ class AccessService
         // identify (parent) folder to get possible access rights
         $currentFolderIdentifier = $storage->getFolderIdentifierFromFileIdentifier($identifier);
         $currentFolder = $storage->getFolder($currentFolderIdentifier);
-        $accessibleFolder = GeneralUtility::makeInstance(FolderRepository::class)
-            ->findFolderByHash($storage, $currentFolder->getHashedIdentifier());
+        $accessibleFolder = $this->folderRepository->findFolderByHash($storage, $currentFolder->getHashedIdentifier());
 
         // accessible folder dataset not found
         // or no access settings are defined in dataset
@@ -110,7 +125,7 @@ class AccessService
                 if ($parent->getIdentifier() === $currentFolder->getIdentifier()) {
                     return null;
                 }
-                $accessibleFolder = self::findDirectoryAccess(
+                $accessibleFolder = $this->findDirectoryAccess(
                     $storage,
                     $currentFolderIdentifier
                 );

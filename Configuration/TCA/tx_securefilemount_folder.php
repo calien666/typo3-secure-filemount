@@ -27,7 +27,7 @@ return [
         'maxSingleDBListItems' => 100,
     ],
     'types' => [
-        '0' => ['showitem' => 'fe_group,--palette--;;filePalette'],
+        '0' => ['showitem' => 'fe_groups,--palette--;;filePalette'],
     ],
     'palettes' => [
         // File palette, hidden but needs to be included all the time
@@ -61,6 +61,6 @@ return [
 
             ],
         ],
-        'fe_group' => $GLOBALS['TCA']['pages']['columns']['fe_group'],
+        'fe_groups' => $GLOBALS['TCA']['pages']['columns']['fe_group'],
     ],
 ];
