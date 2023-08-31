@@ -52,7 +52,7 @@ class FolderRepository
             $result['folder'],
             $result['folder_hash'],
             $folder->getStorage(),
-            $result['fe_group']
+            $result['fe_groups']
         );
     }
 
@@ -86,7 +86,7 @@ class FolderRepository
             $result['folder'],
             $result['folder_hash'],
             $resourceStorage,
-            $result['fe_group']
+            $result['fe_groups']
         );
     }
 
@@ -146,7 +146,7 @@ class FolderRepository
             $result['folder_hash'],
             GeneralUtility::makeInstance(ResourceFactory::class)
                 ->getStorageObject($result['storage']),
-            $result['fe_group']
+            $result['fe_groups']
         );
     }
 }
