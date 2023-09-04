@@ -27,13 +27,13 @@ class Folder
         string $folder,
         string $folderHash,
         ResourceStorage $storage,
-        string $feGroups = ''
+        ?string $feGroups = null
     ) {
         $this->uid = $uid;
         $this->folder = $folder;
         $this->folderHash = $folderHash;
         $this->storage = $storage;
-        $this->feGroups = GeneralUtility::intExplode(',', $feGroups);
+        $this->feGroups = $feGroups ? GeneralUtility::intExplode(',', $feGroups) : [];
     }
 
     public function getUid(): int
