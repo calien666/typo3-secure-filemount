@@ -17,8 +17,8 @@
 	],
 	"require": {
 		"php": "^7.4 || ^8.0",
-		"typo3/cms-core": "^11.5 || ^12.4",
-		"typo3/cms-filelist": "^11.5 || ^12.4"
+		"typo3/cms-core": "^11.5",
+		"typo3/cms-filelist": "^11.5"
 	},
 	"require-dev": {
 		"typo3/testing-framework": "^7.0",
