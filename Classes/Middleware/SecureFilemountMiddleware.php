@@ -16,10 +16,12 @@ use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Routing\SiteRouteResult;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
-class SecureFilemountMiddleware implements MiddlewareInterface
+/**
+ * @internal
+ */
+final class SecureFilemountMiddleware implements MiddlewareInterface
 {
     /**
      * @var array|string[]

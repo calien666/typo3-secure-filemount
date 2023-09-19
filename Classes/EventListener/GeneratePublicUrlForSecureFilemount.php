@@ -6,7 +6,10 @@ namespace Calien\SecureFilemount\EventListener;
 
 use TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent;
 
-class GeneratePublicUrlForSecureFilemount
+/**
+ * @internal
+ */
+final class GeneratePublicUrlForSecureFilemount
 {
     public function __invoke(GeneratePublicUrlForResourceEvent $event): void
     {

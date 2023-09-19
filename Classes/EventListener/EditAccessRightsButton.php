@@ -2,46 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Calien\SecureFilemount\Hooks;
+namespace Calien\SecureFilemount\EventListener;
 
 use Calien\SecureFilemount\Domain\Repository\FolderRepository;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
-use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * @internal
- * @deprecated will be removed when v11 support dropped
  */
-final class ButtonBarHook
+final class EditAccessRightsButton
 {
     private static string $filePattern = '/(\d)(:)(.*)/';
 
-    /**
-     * @param array<int|string, mixed> $params
-     * @return array<int|string, mixed>
-     *
-     * @throws DBALException
-     * @throws Exception
-     * @throws RouteNotFoundException
-     * @throws InsufficientFolderAccessPermissionsException
-     */
-    public function renderButtons(array $params, ButtonBar $buttonBar): array
+    public function __invoke(ModifyButtonBarEvent $event): void
     {
-        $theID = GeneralUtility::_GP('id') ?? '';
-        $buttons = $params['buttons'];
+        /** @var ServerRequestInterface $request */
+        $request = $GLOBALS['TYPO3_REQUEST'];
+        $theID = $request->getParsedBody()['id'] ?? $request->getQueryParams()['id'] ?? '';
         if (preg_match(self::$filePattern, $theID, $matches) === false) {
-            return $buttons;
+            return;
         }
         if (count($matches) === 0) {
-            return $buttons;
+            return;
         }
         $storageId = (int)$matches[1];
         $path = $matches[3];
@@ -49,7 +37,7 @@ final class ButtonBarHook
         $folder = GeneralUtility::makeInstance(FolderRepository::class)
             ->findByStorageAndPath($storageId, $path);
 
-        $editButton = $buttonBar->makeLinkButton()
+        $editAccessRightsButton = $event->getButtonBar()->makeLinkButton()
             ->setIcon(
                 GeneralUtility::makeInstance(IconFactory::class)
                     ->getIcon('actions-lock', Icon::SIZE_SMALL)
@@ -71,8 +59,8 @@ final class ButtonBarHook
             ->setTitle(LocalizationUtility::translate('backend.edit.access', 'secure_filemount') ?? '')
             ->setShowLabelText(true);
 
-        $buttons[ButtonBar::BUTTON_POSITION_LEFT][5][] = $editButton;
-
-        return $buttons;
+        $buttons = $event->getButtons();
+        $buttons['left'][][] = $editAccessRightsButton;
+        $event->setButtons($buttons);
     }
 }

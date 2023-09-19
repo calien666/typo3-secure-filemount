@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Calien\SecureFilemount\ContextMenu;
+namespace Calien\SecureFilemount\ContextMenu\V11;
 
 use Calien\SecureFilemount\Domain\Repository\FolderRepository;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
@@ -16,6 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal
+ * @deprecated will be removed when v11 support dropped
  */
 final class ItemProvider extends AbstractProvider
 {
@@ -39,13 +41,17 @@ final class ItemProvider extends AbstractProvider
 
     /**
      * ItemProvider constructor.
+     * @param ResourceFactory|null $resourceFactory
      */
     public function __construct(
-        ResourceFactory $resourceFactory
+        string $table,
+        string $identifier,
+        string $context = '',
+        ResourceFactory $resourceFactory = null
     ) {
-        parent::__construct();
-
-        $this->resourceFactory = $resourceFactory;
+        $this->resourceFactory = $resourceFactory
+            ?? GeneralUtility::makeInstance(ResourceFactory::class);
+        parent::__construct($table, $identifier, $context);
         // add own items to the default
         $this->itemsConfiguration = array_merge_recursive(
             $this->itemsConfiguration,
@@ -94,6 +100,7 @@ final class ItemProvider extends AbstractProvider
      *     }
      * @throws InsufficientFolderAccessPermissionsException
      * @throws Exception
+     * @throws DBALException
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
@@ -101,7 +108,7 @@ final class ItemProvider extends AbstractProvider
         $folderRecord = $utility->getFolder($this->folder);
 
         return [
-            'data-callback-module' => '@calien/secure-filemount/context-menu-actions',
+            'data-callback-module' => 'TYPO3/CMS/SecureFilemount/ContextMenuActions',
             'data-folder-record-uid' => $folderRecord ? $folderRecord->getUid() : 0,
             'data-storage' => $this->folder->getStorage()->getUid(),
             'data-folder' => $this->folder->getIdentifier(),

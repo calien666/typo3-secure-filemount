@@ -6,6 +6,7 @@ services:
 
   Calien\SecureFilemount\:
     resource: '../Classes/*'
+    exclude: '../Classes/ContextMenu/V11/*'
 
   Calien\SecureFilemount\EventListener\ModifyResourceIcon:
     tags:
@@ -16,3 +17,8 @@ services:
     tags:
       - name: event.listener
         event: TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent
+
+  Calien\SecureFilemount\EventListener\EditAccessRightsButton:
+    tags:
+      - name: event.listener
+        event: TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent
