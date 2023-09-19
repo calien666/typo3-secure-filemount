@@ -14,7 +14,6 @@ use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use function PHPUnit\Framework\countOf;
 
 final class FolderAccessService
 {
@@ -41,7 +40,7 @@ final class FolderAccessService
         $foundStorages = [];
         $storages = $this->storageRepository->findAll();
         foreach ($storages as $storage) {
-            if ($storage->isOnline() && $storage->getStorageRecord()['fe_groups'] != 0) {
+            if ($storage->isOnline() && !$storage->isPublic()) {
                 $foundStorages[] = $storage;
             }
         }

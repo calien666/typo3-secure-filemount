@@ -1,25 +1,9 @@
-/**
- * Module: TYPO3/CMS/SecureFilemount/ContextMenuActions
- *
- * JavaScript to handle the click action of the "SecureFilemount" context menu item
- * @exports TYPO3/CMS/SecureFilemount/ContextMenuActions
- * @deprecated will be removed when v11 support dropped
- */
-define(function () {
-  'use strict';
+class ContextMenuActions {
+  static getReturnUrl() {
+    return encodeURIComponent(top.list_frame.document.location.pathname + top.list_frame.document.location.search);
+  }
 
-  /**
-   * @exports TYPO3/CMS/SecureFilemount/ContextMenuActions
-   */
-  var ContextMenuActions = {};
-
-  /**
-   * Open folder permissions edit form
-   *
-   * @param {string} table
-   * @param {string} uid combined folder identifier
-   */
-  ContextMenuActions.editRecord = function (table, uid) {
+  static editRecord() {
     var folderRecordUid = this.data('folderRecordUid') || 0;
 
     if (folderRecordUid > 0) {
@@ -38,11 +22,6 @@ define(function () {
         + '&returnUrl=' + ContextMenuActions.getReturnUrl()
       );
     }
-  };
-
-  ContextMenuActions.getReturnUrl = function () {
-    return encodeURIComponent(top.list_frame.document.location.pathname + top.list_frame.document.location.search);
-  };
-
-  return ContextMenuActions;
-});
+  }
+}
+export default ContextMenuActions;

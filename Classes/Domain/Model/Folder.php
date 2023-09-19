@@ -33,7 +33,7 @@ class Folder
         $this->folder = $folder;
         $this->folderHash = $folderHash;
         $this->storage = $storage;
-        $this->feGroups = $feGroups ? GeneralUtility::intExplode(',', $feGroups) : [];
+        $this->feGroups = !empty($feGroups) ? GeneralUtility::intExplode(',', $feGroups) : [];
     }
 
     public function getUid(): int

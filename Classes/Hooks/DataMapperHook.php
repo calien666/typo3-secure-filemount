@@ -7,7 +7,10 @@ namespace Calien\SecureFilemount\Hooks;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 
-class DataMapperHook
+/**
+ * @internal
+ */
+final class DataMapperHook
 {
     public function processDatamap_afterDatabaseOperations(
         $status,

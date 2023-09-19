@@ -8,7 +8,10 @@ use Calien\SecureFilemount\Domain\Repository\FolderRepository;
 use TYPO3\CMS\Core\Imaging\Event\ModifyIconForResourcePropertiesEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ModifyResourceIcon
+/**
+ * @internal
+ */
+final class ModifyResourceIcon
 {
     public function __invoke(ModifyIconForResourcePropertiesEvent $event): void
     {

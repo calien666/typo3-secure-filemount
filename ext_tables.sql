@@ -9,7 +9,7 @@ CREATE TABLE tx_securefilemount_folder
     folder      varchar(255) default ''  not null,
     folder_hash varchar(40)  DEFAULT ''  NOT NULL,
 
-    fe_groups   varchar(255) default null,
+    fe_groups   varchar(255) default '' not null,
 
     KEY folder (storage, folder_hash)
 );

@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Calien\SecureFilemount\Domain\Repository;
 
 use Calien\SecureFilemount\Domain\Model\Folder;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -19,9 +18,8 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 class FolderRepository
 {
     /**
-     * @throws DBALException
-     * @throws Exception
      * @throws InsufficientFolderAccessPermissionsException
+     * @throws Exception
      */
     public function getFolder(\TYPO3\CMS\Core\Resource\Folder $folder): ?Folder
     {
@@ -33,7 +31,7 @@ class FolderRepository
             ->where(
                 $db->expr()->eq(
                     'folder',
-                    $db->createNamedParameter($folder->getName())
+                    $db->createNamedParameter($folder->getIdentifier())
                 ),
                 $db->expr()->eq(
                     'storage',
@@ -57,9 +55,8 @@ class FolderRepository
     }
 
     /**
-     * @throws Exception
-     * @throws DBALException
      * @throws InsufficientFolderAccessPermissionsException
+     * @throws Exception
      */
     public function findByStorageAndPath(int $storage, string $path): Folder
     {
@@ -119,6 +116,9 @@ class FolderRepository
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function findFolderByHash(ResourceStorage $storage, string $hashIdentifier): ?Folder
     {
         $db = GeneralUtility::makeInstance(ConnectionPool::class)
