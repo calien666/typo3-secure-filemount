@@ -25,7 +25,7 @@ final class ItemProvider extends AbstractProvider
 {
     protected ResourceFactory $resourceFactory;
 
-    protected Folder $folder;
+    protected ?Folder $folder = null;
 
     /**
      * @var array<string, mixed>
@@ -69,6 +69,19 @@ final class ItemProvider extends AbstractProvider
     public function canHandle(): bool
     {
         return $this->table === 'sys_file' || $this->table === 'sys_file_storage';
+    }
+
+    /**
+     * @throws ResourceDoesNotExistException
+     */
+    public function addItems(array $items): array
+    {
+        $this->initialize();
+        if (!$this->folder instanceof Folder) {
+            return $items;
+        }
+        $items += $this->prepareItems($this->itemsConfiguration);
+        return $items;
     }
 
     /**
