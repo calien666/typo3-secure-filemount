@@ -1,5 +1,6 @@
 [![Latest Stable Version](https://poser.pugx.org/calien/secure-filemount/v/stable.svg?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
 [![TYPO3 11.5](https://img.shields.io/badge/TYPO3-11.5-green.svg?style=for-the-badge)](https://get.typo3.org/version/11)
+[![TYPO3 12.4](https://img.shields.io/badge/TYPO3-12.4-green.svg?style=for-the-badge)](https://get.typo3.org/version/12)
 [![License](http://poser.pugx.org/calien/secure-filemount/license?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
 [![Total Downloads](https://poser.pugx.org/calien/secure-filemount/downloads.svg?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
 [![Monthly Downloads](https://poser.pugx.org/calien/secure-filemount/d/monthly?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
@@ -32,6 +33,13 @@ We prefer composer installation:
 ```bash
 composer req calien/secure-filemount
 ```
+
+## Configuration
+
+Due to core restrictions on table access, it is highly needed to allow all
+backend users access to table `tx_securefilemount_folder`. Users will never see
+this table in a list, as the table is located on root level and hidden (like
+sys_file_metadata, sys_file).
 
 |                  | URL                                                          |
 |------------------|--------------------------------------------------------------|

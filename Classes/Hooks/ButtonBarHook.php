@@ -19,6 +19,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 /**
  * @internal
  * @deprecated will be removed when v11 support dropped
+ * @see @see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.0/Breaking-96806-RemovedHookForModifyingButtonBar.html
  */
 final class ButtonBarHook
 {

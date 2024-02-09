@@ -15,6 +15,8 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * @internal
+ * Introduced as ButtonBarHook was removed as breaking change in v12.0
+ * @see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.0/Breaking-96806-RemovedHookForModifyingButtonBar.html
  */
 final class EditAccessRightsButton
 {
@@ -36,6 +38,10 @@ final class EditAccessRightsButton
 
         $folder = GeneralUtility::makeInstance(FolderRepository::class)
             ->findByStorageAndPath($storageId, $path);
+
+        if ($folder->getStorage()->isPublic()) {
+            return;
+        }
 
         $editAccessRightsButton = $event->getButtonBar()->makeLinkButton()
             ->setIcon(
