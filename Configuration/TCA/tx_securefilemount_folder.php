@@ -9,10 +9,9 @@ return [
         'iconfile' => 'EXT:secure_filemount/Resources/Public/Icons/Extension.svg',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'delete' => 'deleted',
         'hideTable' => true,
-        'rootLevel' => true,
+        'rootLevel' => 1,
         'default_sortby' => 'ORDER BY folder ASC',
         'security' => [
             'ignoreWebMountRestriction' => true,

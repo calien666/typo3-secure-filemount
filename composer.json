@@ -16,9 +16,9 @@
 		}
 	],
 	"require": {
-		"php": "^7.4 || ^8.0",
-		"typo3/cms-core": "^11.5",
-		"typo3/cms-filelist": "^11.5"
+		"php": "^7.4 || ^8.0 || ^8.1 || ^8.2",
+		"typo3/cms-core": "^11.5 || ^12.4",
+		"typo3/cms-filelist": "^11.5 || ^12.4"
 	},
 	"require-dev": {
 		"typo3/testing-framework": "^7.0",
@@ -34,6 +34,11 @@
 	"autoload": {
 		"psr-4": {
 			"Calien\\SecureFilemount\\": "Classes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Calien\\SecureFilemount\\Tests\\": "Tests/"
 		}
 	},
 	"config": {

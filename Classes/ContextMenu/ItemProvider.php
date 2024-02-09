@@ -16,12 +16,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal
+ * Only for TYPO3 >v12
+ * @see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.0/Breaking-96333-AutoConfigurationOfContextMenuItemProviders.html
  */
 final class ItemProvider extends AbstractProvider
 {
     protected ResourceFactory $resourceFactory;
 
-    protected Folder $folder;
+    protected ?Folder $folder = null;
 
     /**
      * @var array<string, mixed>
@@ -66,6 +68,19 @@ final class ItemProvider extends AbstractProvider
     /**
      * @throws ResourceDoesNotExistException
      */
+    public function addItems(array $items): array
+    {
+        $this->initialize();
+        if (!$this->folder instanceof Folder) {
+            return $items;
+        }
+        $items += $this->prepareItems($this->itemsConfiguration);
+        return $items;
+    }
+
+    /**
+     * @throws ResourceDoesNotExistException
+     */
     protected function initialize(): void
     {
         parent::initialize();
@@ -97,6 +112,9 @@ final class ItemProvider extends AbstractProvider
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
+        if (!$this->folder instanceof Folder) {
+            return [];
+        }
         $utility = GeneralUtility::makeInstance(FolderRepository::class);
         $folderRecord = $utility->getFolder($this->folder);
 

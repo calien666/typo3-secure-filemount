@@ -11,3 +11,4 @@
 /composer.json.orig
 /.php-cs-fixer.cache
 /Documentation-GENERATED-temp/
+/Build/testing-docker/.env

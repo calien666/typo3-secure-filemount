@@ -15,7 +15,10 @@ use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
-class FolderRepository
+/**
+ * @internal Only for usage inside secure_filemount, no public API
+ */
+final class FolderRepository
 {
     /**
      * @throws InsufficientFolderAccessPermissionsException

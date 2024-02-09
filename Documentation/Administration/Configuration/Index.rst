@@ -7,7 +7,7 @@ Configuration
 
 .. attention::
 
-    To establish complete security, the secure file storage should be located
+    To establish complete security, the secure file storage must be located
     outside the public directory. TYPO3 can work with file storages outside of
     its own system, so there are no problems to be editorially active in the
     backend. A file store outside the public directory increases the security of
@@ -16,7 +16,7 @@ Configuration
 Steps
 =====
 
-#.  create a local storage (best outside TYPO3 public)
+#.  create a local storage (outside TYPO3 public)
 
     .. code-block:: bash
 
@@ -27,7 +27,9 @@ Steps
     .. figure:: /Images/Administration/filestorage-general.png
         :alt: Setup of a secure file storage
 
-    Be aware of the Base URI, as this field needs to be set up.
+    Be aware of the Base URI, as this field needs to be set up. This ensures
+    speaking URLs in the frontend and the middleware accessing the right
+    storage.
 
 #.  Optional: Set up an access group for this file storage. This Access group is
     working as fallback, if no access is defined in file list module.
@@ -39,6 +41,16 @@ Steps
 
     According to your web server, there should be settings done to redirect
     the access to files to the TYPO3 instead of answering with a 404 - Not found
+
+Backend Users and groups
+========================
+
+.. attention::
+
+    Due to core restrictions on table access, it is highly needed to allow all
+    backend users access to table `tx_securefilemount_folder`. Users will never
+    see this table in a list, as the table is located on root level and hidden
+    (like sys_file_metadata, sys_file).
 
 Server Configuration
 ====================
