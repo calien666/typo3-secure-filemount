@@ -22,6 +22,22 @@ final class EditAccessRightsButton
 {
     private static string $filePattern = '/(\d)(:)(.*)/';
 
+    private IconFactory $iconFactory;
+
+    private UriBuilder $uriBuilder;
+
+    private FolderRepository $folderRepository;
+
+    public function __construct(
+        UriBuilder $uriBuilder,
+        FolderRepository $folderRepository,
+        IconFactory $iconFactory
+    ) {
+        $this->uriBuilder = $uriBuilder;
+        $this->folderRepository = $folderRepository;
+        $this->iconFactory = $iconFactory;
+    }
+
     public function __invoke(ModifyButtonBarEvent $event): void
     {
         /** @var ServerRequestInterface $request */
@@ -36,7 +52,7 @@ final class EditAccessRightsButton
         $storageId = (int)$matches[1];
         $path = $matches[3];
 
-        $folder = GeneralUtility::makeInstance(FolderRepository::class)
+        $folder = $this->folderRepository
             ->findByStorageAndPath($storageId, $path);
 
         if ($folder->getStorage()->isPublic()) {
@@ -45,11 +61,11 @@ final class EditAccessRightsButton
 
         $editAccessRightsButton = $event->getButtonBar()->makeLinkButton()
             ->setIcon(
-                GeneralUtility::makeInstance(IconFactory::class)
+                $this->iconFactory
                     ->getIcon('actions-lock', Icon::SIZE_SMALL)
             )
             ->setHref(
-                (string)GeneralUtility::makeInstance(UriBuilder::class)
+                (string)$this->uriBuilder
                     ->buildUriFromRoute(
                         'record_edit',
                         [

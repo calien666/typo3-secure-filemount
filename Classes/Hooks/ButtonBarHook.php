@@ -50,6 +50,10 @@ final class ButtonBarHook
         $folder = GeneralUtility::makeInstance(FolderRepository::class)
             ->findByStorageAndPath($storageId, $path);
 
+        if ($folder->getStorage()->isPublic()) {
+            return $buttons;
+        }
+
         $editButton = $buttonBar->makeLinkButton()
             ->setIcon(
                 GeneralUtility::makeInstance(IconFactory::class)

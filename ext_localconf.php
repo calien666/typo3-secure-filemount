@@ -7,7 +7,7 @@
             = \Calien\SecureFilemount\ContextMenu\V11\ItemProvider::class;
 
         // Will be removed when v11 support dropped
-        // @see @see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.0/Breaking-96806-RemovedHookForModifyingButtonBar.html
+        // @see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.0/Breaking-96806-RemovedHookForModifyingButtonBar.html
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar']['getButtonsHook'][1679002016878]
             = \Calien\SecureFilemount\Hooks\ButtonBarHook::class . '->renderButtons';
     }
