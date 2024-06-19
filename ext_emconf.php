@@ -11,7 +11,7 @@ $EM_CONF[$_EXTKEY] = [
     ],
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.0-12.4.99',
+            'typo3' => '10.4.0-12.4.99',
             'php' => '7.4.0-8.3.99',
         ],
         'conflicts' => [
@@ -24,5 +24,5 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Markus Hofmann',
     'author_email' => 'typo3@calien.de',
     'author_company' => '',
-    'version' => '1.1.0',
+    'version' => '1.1.1',
 ];
