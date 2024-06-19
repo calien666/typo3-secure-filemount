@@ -24,5 +24,5 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Markus Hofmann',
     'author_email' => 'typo3@calien.de',
     'author_company' => '',
-    'version' => '1.1.1',
+    'version' => '1.1.2',
 ];
