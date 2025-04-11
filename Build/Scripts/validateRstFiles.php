@@ -46,19 +46,16 @@ class validateRstFiles
      */
     protected $isError;
 
-    /**
-     * @var string
-     */
-    protected $baseDir = 'Documentation';
+    protected string $baseDir = 'Documentation';
 
     public function __construct(string $dir = '')
     {
-        if ($dir) {
+        if ($dir !== '' && $dir !== '0') {
             $this->baseDir = $dir;
         }
     }
 
-    public function validate()
+    public function validate(): void
     {
         printf('Searching for rst snippets in ' . $this->baseDir . chr(10));
 
@@ -97,6 +94,7 @@ class validateRstFiles
             fwrite(STDERR, 'Found ' . $count . ' rst files with errors, check full log for details.' . chr(10));
             exit(1);
         }
+
         exit(0);
     }
 
@@ -140,7 +138,7 @@ class validateRstFiles
                 'type' => 'include',
                 'regex' => '#^\\.\\. include:: /Includes.rst.txt#m',
                 'title' => 'no include',
-                'message' => 'insert \'.. include:: /Includes.rst.txt\' in first line of the file',
+                'message' => "insert '.. include:: /Includes.rst.txt' in first line of the file",
             ],
             [
                 'type' => 'title',
@@ -153,13 +151,13 @@ class validateRstFiles
                 'regex' => '#(\={2,}\n)(Deprecation|Feature|Breaking|Important)(\:\s+\#)([0-9]{4,8})(=?.*\n\={2,})#m',
                 'title' => 'invalid title format',
                 'message' => 'A changelog entry title must have the following format: '
-                    . '\'(Breaking|Feature|Deprecation|Important) #<issue nr>: <title>\'',
+                    . "'(Breaking|Feature|Deprecation|Important) #<issue nr>: <title>'",
             ],
             [
                 'type' => 'titleformat',
                 'regex' => '#^See :issue:`[0-9]{4,6}`#m',
                 'title' => 'no reference',
-                'message' => 'insert \'See :issue:`<issuenumber>`\' after headline',
+                'message' => "insert 'See :issue:`<issuenumber>`' after headline",
             ],
         ];
 
@@ -168,24 +166,25 @@ class validateRstFiles
                 $this->setError($values);
             }
         }
+
         $this->validateLinkTarget($fileContent);
     }
 
-    private function setError(array $config)
+    private function setError(array $config): void
     {
         $this->messages[$config['type']]['title'] = $config['title'];
         $this->messages[$config['type']]['message'] = $config['message'];
         $this->isError = true;
     }
 
-    private function validateLinkTarget(string $fileContent)
+    private function validateLinkTarget(string $fileContent): void
     {
         $linkTargetConfig = [
             'type' => 'linktarget',
             'regex' => '#(\.\.\s+\_)([a-zA-Z0-9-_]*)(\:\s*)(\={2,}\n.*\n\={2,})#m',
             'title' => 'no link target',
             'message' => 'Each document must have a unique link target right before the main headline. '
-                . ' \'.. _deprecation-issuenumber:\' or \'.. _feature-issuenumber-currenttimestamp:\' are good choices.',
+                . " '.. _deprecation-issuenumber:' or '.. _feature-issuenumber-currenttimestamp:' are good choices.",
         ];
         $result = preg_match($linkTargetConfig['regex'], $fileContent, $matches);
         if ($result === 1 && count($matches) > 2) {
@@ -212,7 +211,7 @@ class validateRstFiles
                 'type' => 'index',
                 'regex' => '#^\.\. index:: (?:(?:TypoScript|TSConfig|TCA|FlexForm|LocalConfiguration|Fluid|FAL|Database|JavaScript|PHP-API|Frontend|Configuration|CLI|RTE|YAML|ext:[a-zA-Z_0-9]+)(?:,\\s|$))+#',
                 'title' => 'no or wrong index',
-                'message' => 'insert \'.. index:: <at least one valid keyword>\' at the last line of the file. See Build/Scripts/validateRstFiles.php for allowed keywords',
+                'message' => "insert '.. index:: <at least one valid keyword>' at the last line of the file. See Build/Scripts/validateRstFiles.php for allowed keywords",
             ],
         ];
 
@@ -240,7 +239,7 @@ class validateRstFiles
                     . '#',
                 'regex' => '#^\.\. index:: .*[, ](?:Fully|Partially|Not)Scanned([, ]|$).*#',
                 'title' => 'missing FullyScanned / PartiallyScanned / NotScanned tag',
-                'message' => 'insert \'.. index:: <at least one valid keyword and either FullyScanned, PartiallyScanned or NotScanned>\' at the last line of the file. See Build/Scripts/validateRstFiles.php for allowed keywords',
+                'message' => "insert '.. index:: <at least one valid keyword and either FullyScanned, PartiallyScanned or NotScanned>' at the last line of the file. See Build/Scripts/validateRstFiles.php for allowed keywords",
             ],
         ];
 
@@ -248,6 +247,7 @@ class validateRstFiles
             if (preg_match($values['regexIgnoreFilename'], $path) === 1) {
                 continue;
             }
+
             if (preg_match($values['regex'], $lastLine) !== 1) {
                 $this->messages[$values['type']]['title'] = $values['title'];
                 $this->messages[$values['type']]['message'] = $values['message'];
@@ -262,5 +262,6 @@ $args = getopt('d:');
 if (isset($args['d'])) {
     $dir = $args['d'];
 }
+
 $validator = new validateRstFiles($dir);
 $validator->validate();

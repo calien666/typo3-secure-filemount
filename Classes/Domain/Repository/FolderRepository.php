@@ -48,6 +48,7 @@ final class FolderRepository
                 $folder->getIdentifier()
             );
         }
+
         return new Folder(
             $result['uid'],
             $result['folder'],
@@ -109,6 +110,7 @@ final class FolderRepository
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
         $dataHandler->start($data, []);
         $dataHandler->process_datamap();
+
         $id = $dataHandler->substNEWwithIDs[$newFolderId];
 
         return new Folder(
@@ -143,6 +145,7 @@ final class FolderRepository
         if ($result === false) {
             return null;
         }
+
         return new Folder(
             $result['uid'],
             $result['folder'],

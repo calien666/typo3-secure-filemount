@@ -21,12 +21,15 @@ final class ModifyResourceIcon
         if ($folder === null) {
             return;
         }
+
         if (count($folder->getFeGroups()) === 0) {
             return;
         }
+
         if (count($folder->getFeGroups()) === 1 && $folder->getFeGroups()[0] === 0) {
             return;
         }
+
         $event->setOverlayIdentifier('status-user-group-frontend');
     }
 }

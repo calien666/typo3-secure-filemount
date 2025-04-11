@@ -1,6 +1,8 @@
 <?php
 
-(function () {
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+(function (): void {
     $fe_groups = [
         'fe_groups' => [
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.fe_group',
@@ -24,9 +26,9 @@
             ],
         ],
     ];
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_file_storage', $fe_groups);
+    ExtensionManagementUtility::addTCAcolumns('sys_file_storage', $fe_groups);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+    ExtensionManagementUtility::addToAllTCAtypes(
         'sys_file_storage',
         'fe_groups',
         '',

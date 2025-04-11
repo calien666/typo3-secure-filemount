@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use PhpParser\Node\Stmt\ClassMethod;
+use Symfony\Component\Finder\Finder;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
@@ -21,7 +23,7 @@ class NodeVisitor extends NodeVisitorAbstract
 
     public function enterNode(Node $node): void
     {
-        if (($node instanceof Node\Stmt\ClassMethod) && str_starts_with($node->name->name, 'test')) {
+        if (($node instanceof ClassMethod) && str_starts_with($node->name->name, 'test')) {
             $this->matches[$node->getLine()] = $node->name->name;
         }
     }
@@ -29,7 +31,7 @@ class NodeVisitor extends NodeVisitorAbstract
 
 $parser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
 
-$finder = new Symfony\Component\Finder\Finder();
+$finder = new Finder();
 $finder->files()
     ->in([
         __DIR__ . '/../../Tests/Unit/',
@@ -55,7 +57,7 @@ foreach ($finder as $file) {
 
     $ast = $traverser->traverse($ast);
 
-    if (!empty($visitor->matches)) {
+    if ($visitor->matches !== []) {
         $errors[$file->getRealPath()] = $visitor->matches;
         $output->write('<error>F</error>');
     } else {
@@ -65,7 +67,7 @@ foreach ($finder as $file) {
 
 $output->writeln('');
 
-if (!empty($errors)) {
+if ($errors !== []) {
     $output->writeln('');
 
     foreach ($errors as $file => $matchesPerLine) {
@@ -81,6 +83,7 @@ if (!empty($errors)) {
             $output->writeln('Method:' . $methodName . ' Line:' . $line);
         }
     }
+
     exit(1);
 }
 

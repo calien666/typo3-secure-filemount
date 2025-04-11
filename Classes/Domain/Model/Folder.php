@@ -9,37 +9,26 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Folder
 {
-    protected int $uid;
-
-    protected string $folder;
-
-    protected string $folderHash;
-
-    protected ResourceStorage $storage;
-
     /**
      * @var int[]
      */
     protected array $feGroups = [];
 
     public function __construct(
-        int $uid,
-        string $folder,
-        string $folderHash,
-        ResourceStorage $storage,
+        protected int $uid,
+        protected string $folder,
+        protected string $folderHash,
+        protected ResourceStorage $storage,
         ?string $feGroups = null
     ) {
-        $this->uid = $uid;
-        $this->folder = $folder;
-        $this->folderHash = $folderHash;
-        $this->storage = $storage;
-        $this->feGroups = !empty($feGroups) ? GeneralUtility::intExplode(',', $feGroups, true) : [];
+        $this->feGroups = $feGroups === null || $feGroups === '' || $feGroups === '0' ? [] : GeneralUtility::intExplode(',', $feGroups, true);
     }
 
     public function getUid(): int
     {
         return $this->uid;
     }
+
     public function getFolder(): string
     {
         return $this->folder;
@@ -65,6 +54,6 @@ class Folder
 
     public function hasAccessDefined(): bool
     {
-        return count($this->feGroups) > 0;
+        return $this->feGroups !== [];
     }
 }

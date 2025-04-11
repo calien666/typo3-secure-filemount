@@ -22,33 +22,25 @@ final class EditAccessRightsButton
 {
     private static string $filePattern = '/(\d)(:)(.*)/';
 
-    private IconFactory $iconFactory;
-
-    private UriBuilder $uriBuilder;
-
-    private FolderRepository $folderRepository;
-
     public function __construct(
-        UriBuilder $uriBuilder,
-        FolderRepository $folderRepository,
-        IconFactory $iconFactory
-    ) {
-        $this->uriBuilder = $uriBuilder;
-        $this->folderRepository = $folderRepository;
-        $this->iconFactory = $iconFactory;
-    }
+        private readonly UriBuilder $uriBuilder,
+        private readonly FolderRepository $folderRepository,
+        private readonly IconFactory $iconFactory
+    ) {}
 
     public function __invoke(ModifyButtonBarEvent $event): void
     {
         /** @var ServerRequestInterface $request */
         $request = $GLOBALS['TYPO3_REQUEST'];
         $theID = $request->getParsedBody()['id'] ?? $request->getQueryParams()['id'] ?? '';
-        if (preg_match(self::$filePattern, $theID, $matches) === false) {
+        if (preg_match(self::$filePattern, (string) $theID, $matches) === false) {
             return;
         }
-        if (count($matches) === 0) {
+
+        if ($matches === []) {
             return;
         }
+
         $storageId = (int)$matches[1];
         $path = $matches[3];
 
@@ -78,7 +70,7 @@ final class EditAccessRightsButton
                         ]
                     )
             )
-            ->setTitle(LocalizationUtility::translate('backend.edit.access', 'secure_filemount') ?? '')
+            ->setTitle(LocalizationUtility::translate('backend.edit.access', 'SecureFilemount') ?? '')
             ->setShowLabelText(true);
 
         $buttons = $event->getButtons();

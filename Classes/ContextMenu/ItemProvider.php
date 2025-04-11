@@ -21,8 +21,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class ItemProvider extends AbstractProvider
 {
-    protected ResourceFactory $resourceFactory;
-
     protected ?Folder $folder = null;
 
     /**
@@ -43,11 +41,9 @@ final class ItemProvider extends AbstractProvider
      * ItemProvider constructor.
      */
     public function __construct(
-        ResourceFactory $resourceFactory
+        protected ResourceFactory $resourceFactory
     ) {
         parent::__construct();
-
-        $this->resourceFactory = $resourceFactory;
         // add own items to the default
         $this->itemsConfiguration = array_merge_recursive(
             $this->itemsConfiguration,
@@ -74,6 +70,7 @@ final class ItemProvider extends AbstractProvider
         if (!$this->folder instanceof Folder) {
             return $items;
         }
+
         $items += $this->prepareItems($this->itemsConfiguration);
         return $items;
     }
@@ -115,6 +112,7 @@ final class ItemProvider extends AbstractProvider
         if (!$this->folder instanceof Folder) {
             return [];
         }
+
         $utility = GeneralUtility::makeInstance(FolderRepository::class);
         $folderRecord = $utility->getFolder($this->folder);
 
