@@ -16,14 +16,14 @@
 		}
 	],
 	"require": {
-		"php": "^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3",
-		"typo3/cms-backend": "^10.4 || ^11.5 || ^12.4",
-		"typo3/cms-core": "^10.4 || ^11.5 || ^12.4",
-		"typo3/cms-filelist": "^10.4 || ^11.5 || ^12.4",
-		"typo3/cms-frontend": "^10.4 || ^11.5 || ^12.4"
+		"php": "^8.1 || ^8.2 || ^8.3 || ^8.4",
+		"typo3/cms-backend": "^12.4 || ^13.4",
+		"typo3/cms-core": "^12.4 || ^13.4",
+		"typo3/cms-filelist": "^12.4 || ^13.4",
+		"typo3/cms-frontend": "^12.4 || ^13.4"
 	},
 	"require-dev": {
-		"typo3/testing-framework": "^7.0",
+		"typo3/testing-framework": "^8.2.7",
 		"saschaegerer/phpstan-typo3": "^1.8",
 		"phpstan/phpstan": "^1.10",
 		"friendsofphp/php-cs-fixer": "^v3.14"

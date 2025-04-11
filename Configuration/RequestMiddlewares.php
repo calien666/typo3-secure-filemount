@@ -1,9 +1,11 @@
 <?php
 
+use Calien\SecureFilemount\Middleware\SecureFilemountMiddleware;
+
 return [
     'frontend' => [
         'secure-filemount' => [
-            'target' => \Calien\SecureFilemount\Middleware\SecureFilemountMiddleware::class,
+            'target' => SecureFilemountMiddleware::class,
             'before' => [
                 'typo3/cms-frontend/base-redirect-resolver',
             ],

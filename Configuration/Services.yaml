@@ -6,7 +6,6 @@ services:
 
   Calien\SecureFilemount\:
     resource: '../Classes/*'
-    exclude: '../Classes/ContextMenu/V11/*'
 
   Calien\SecureFilemount\EventListener\ModifyResourceIcon:
     tags:

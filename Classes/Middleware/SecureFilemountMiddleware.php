@@ -31,13 +31,9 @@ final class SecureFilemountMiddleware implements MiddlewareInterface
         'css' => 'text/css',
     ];
 
-    protected FolderAccessService $accessService;
-
     public function __construct(
-        FolderAccessService $accessService
-    ) {
-        $this->accessService = $accessService;
-    }
+        protected FolderAccessService $accessService
+    ) {}
 
     /**
      * @inheritDoc
@@ -55,13 +51,14 @@ final class SecureFilemountMiddleware implements MiddlewareInterface
         $searchBasePath = array_shift($pathArray);
         foreach ($storages as $storage) {
             $conf = $storage->getConfiguration();
-            $basePath = trim($conf['baseUri'], '/');
+            $basePath = trim((string) $conf['baseUri'], '/');
             if ($searchBasePath === $basePath) {
                 $foundStorage = $storage;
             }
         }
+
         if (!is_null($foundStorage)) {
-            $identifier = substr($path->getUri()->getPath(), strlen($foundStorage->getConfiguration()['baseUri']));
+            $identifier = substr($path->getUri()->getPath(), strlen((string) $foundStorage->getConfiguration()['baseUri']));
             $accessGranted = $this->accessService->checkResourceAccess($foundStorage, $identifier);
             if (!$accessGranted) {
                 return GeneralUtility::makeInstance(ErrorController::class)->accessDeniedAction(
@@ -69,16 +66,19 @@ final class SecureFilemountMiddleware implements MiddlewareInterface
                     'You are not allowed to enter this content.'
                 );
             }
+
             $file = $foundStorage->getFile($identifier);
             $stream = new Stream($file->getForLocalProcessing());
             $mime = $file->getMimeType();
             if (array_key_exists($file->getExtension(), $this->mimeTypeMappings)) {
                 $mime = $this->mimeTypeMappings[$file->getExtension()];
             }
+
             return (new Response())
                 ->withHeader('Content-Type', $mime)
                 ->withBody($stream);
         }
+
         return $handler->handle($request);
     }
 }

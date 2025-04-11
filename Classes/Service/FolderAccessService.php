@@ -17,21 +17,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class FolderAccessService
 {
-    protected FolderRepository $folderRepository;
-
-    protected StorageRepository $storageRepository;
-
-    protected Context $context;
-
     public function __construct(
-        FolderRepository $folderRepository,
-        StorageRepository $storageRepository,
-        Context $context
-    ) {
-        $this->folderRepository = $folderRepository;
-        $this->storageRepository = $storageRepository;
-        $this->context = $context;
-    }
+        protected FolderRepository $folderRepository,
+        protected StorageRepository $storageRepository,
+        protected Context $context
+    ) {}
+
     /**
      * @return ResourceStorage[]
      */
@@ -59,6 +50,7 @@ final class FolderAccessService
         if ($this->context->getPropertyFromAspect('backend.user', 'isLoggedIn')) {
             return true;
         }
+
         /** @var UserAspect $feUser */
         $feUser = $this->context->getAspect('frontend.user');
         // early exit, if we don't have a frontend login
@@ -73,20 +65,15 @@ final class FolderAccessService
         $datasetGroupArray = $feUser->getGroupIds();
         $folderAccess = $this->findDirectoryAccess($storage, $identifier);
         $storageRecord = $storage->getStorageRecord();
-        $groupArray = $folderAccess
+        $groupArray = $folderAccess instanceof Folder
             ? $folderAccess->getFeGroups()
             : GeneralUtility::intExplode(',', $storageRecord['fe_group']);
 
         // check if the user has a related group or enabled for every login
         $groupArrayCount = count($groupArray);
-        if (
-            in_array(-2, $groupArray, true) ||
-            count(array_diff($groupArray, $feUser->getGroupIds())) < $groupArrayCount ||
-            count(array_diff($groupArray, $datasetGroupArray)) < $groupArrayCount
-        ) {
-            return true;
-        }
-        return false;
+        return in_array(-2, $groupArray, true) ||
+        count(array_diff($groupArray, $feUser->getGroupIds())) < $groupArrayCount ||
+        count(array_diff($groupArray, $datasetGroupArray)) < $groupArrayCount;
     }
 
     private function findDirectoryAccess(ResourceStorage $storage, string $identifier): ?Folder
@@ -95,9 +82,10 @@ final class FolderAccessService
         // to identify possible processed
         try {
             $file = $storage->getFile($identifier);
-        } catch (\InvalidArgumentException $_) {
+        } catch (\InvalidArgumentException) {
             $file = $storage->getFolder($identifier);
         }
+
         // if the file is processed, e.g. image, get original
         // as we want the access rights of original file
         if ($file instanceof ProcessedFile) {
@@ -124,14 +112,16 @@ final class FolderAccessService
                 if ($parent->getIdentifier() === $currentFolder->getIdentifier()) {
                     return null;
                 }
+
                 $accessibleFolder = $this->findDirectoryAccess(
                     $storage,
                     $currentFolderIdentifier
                 );
-            } catch (InvalidPathException $_) {
+            } catch (InvalidPathException) {
                 return null;
             }
         }
+
         return $accessibleFolder;
     }
 }

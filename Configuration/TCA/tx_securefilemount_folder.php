@@ -50,7 +50,7 @@ return [
             'label' => 'LLL:EXT:secure_filemount/Resources/Private/Language/locallang.xlf:folder.folder',
             'config' => [
                 'type' => 'input',
-                'eval' => 'required',
+                'required' => true,
             ],
         ],
         'folder_hash' => [

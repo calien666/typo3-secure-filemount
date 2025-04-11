@@ -1,4 +1,7 @@
 <?php
+use PhpCsFixer\Finder;
+use PhpCsFixer\Config;
+
 /**
  *  $ php-cs-fixer fix --config .php-cs-rules.php
  *
@@ -12,7 +15,7 @@ if (PHP_SAPI !== 'cli') {
     die('This script supports command line usage only. Please check your command.');
 }
 
-$finder = PhpCsFixer\Finder::create()
+$finder = Finder::create()
     ->ignoreVCSIgnored(true)
     ->exclude([
         '.Build/',
@@ -21,7 +24,7 @@ $finder = PhpCsFixer\Finder::create()
     ])
     ->in(realpath(__DIR__ . '/../../'));
 
-return (new PhpCsFixer\Config())
+return (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@PHP74Migration' => true,
