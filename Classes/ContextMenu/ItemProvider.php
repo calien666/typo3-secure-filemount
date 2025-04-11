@@ -63,6 +63,8 @@ final class ItemProvider extends AbstractProvider
 
     /**
      * @throws ResourceDoesNotExistException
+     * @param array<array-key, array<string, mixed>> $items
+     * @return array<array-key, array<string, mixed>>
      */
     public function addItems(array $items): array
     {
@@ -103,7 +105,7 @@ final class ItemProvider extends AbstractProvider
      *     data-storage: int,
      *     data-folder: string,
      *     data-folder-hash: string
-     *     }
+     *     }|array{}
      * @throws InsufficientFolderAccessPermissionsException
      * @throws Exception
      */

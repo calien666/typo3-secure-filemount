@@ -10,7 +10,6 @@ use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -32,8 +31,12 @@ final class EditAccessRightsButton
     {
         /** @var ServerRequestInterface $request */
         $request = $GLOBALS['TYPO3_REQUEST'];
-        $theID = $request->getParsedBody()['id'] ?? $request->getQueryParams()['id'] ?? '';
-        if (preg_match(self::$filePattern, (string) $theID, $matches) === false) {
+
+        /** @var array<array-key, mixed>|null $parsedBody */
+        $parsedBody = $request->getParsedBody();
+
+        $theID = $parsedBody['id'] ?? $request->getQueryParams()['id'] ?? '';
+        if (preg_match(self::$filePattern, (string)$theID, $matches) === false) {
             return;
         }
 
@@ -66,7 +69,7 @@ final class EditAccessRightsButton
                                     $folder->getUid() => 'edit',
                                 ],
                             ],
-                            'returnUrl' => (string)$GLOBALS['TYPO3_REQUEST']->getUri()
+                            'returnUrl' => (string)$GLOBALS['TYPO3_REQUEST']->getUri(),
                         ]
                     )
             )

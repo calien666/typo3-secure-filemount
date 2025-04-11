@@ -58,7 +58,6 @@ final class FolderAccessService
             return false;
         }
 
-
         // detect current users groups and
         // folder access groups, if given
         // otherwise look into file storage

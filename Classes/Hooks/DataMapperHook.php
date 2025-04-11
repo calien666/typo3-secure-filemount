@@ -12,10 +12,13 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
  */
 final class DataMapperHook
 {
+    /**
+     * @param array<string, mixed> $fieldArray
+     */
     public function processDatamap_afterDatabaseOperations(
-        $status,
-        $table,
-        $id,
+        string $status,
+        string $table,
+        string|int $id,
         array $fieldArray,
         DataHandler $dataHandler
     ): void {

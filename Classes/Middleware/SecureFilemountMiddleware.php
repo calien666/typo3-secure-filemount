@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Calien\SecureFilemount\Middleware;
 
+use Calien\SecureFilemount\Service\FolderAccessService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Calien\SecureFilemount\Service\FolderAccessService;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\Http\Response;
@@ -43,22 +43,25 @@ final class SecureFilemountMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $storages = $this->accessService->getProtectedFileStorages();
+
         /** @var SiteRouteResult $path */
         $path = $request->getAttribute('routing');
-        /** @var ResourceStorage $foundStorage */
+
+        /** @var ResourceStorage|null $foundStorage */
         $foundStorage = null;
+
         $pathArray = array_filter(GeneralUtility::trimExplode('/', trim($path->getUri()->getPath(), '/')));
         $searchBasePath = array_shift($pathArray);
         foreach ($storages as $storage) {
             $conf = $storage->getConfiguration();
-            $basePath = trim((string) $conf['baseUri'], '/');
+            $basePath = trim((string)$conf['baseUri'], '/');
             if ($searchBasePath === $basePath) {
                 $foundStorage = $storage;
             }
         }
 
-        if (!is_null($foundStorage)) {
-            $identifier = substr($path->getUri()->getPath(), strlen((string) $foundStorage->getConfiguration()['baseUri']));
+        if ($foundStorage instanceof ResourceStorage) {
+            $identifier = substr($path->getUri()->getPath(), strlen((string)$foundStorage->getConfiguration()['baseUri']));
             $accessGranted = $this->accessService->checkResourceAccess($foundStorage, $identifier);
             if (!$accessGranted) {
                 return GeneralUtility::makeInstance(ErrorController::class)->accessDeniedAction(
