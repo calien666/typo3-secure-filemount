@@ -31,6 +31,9 @@
 	"extra": {
 		"typo3/cms": {
 			"extension-key": "secure_filemount"
+		},
+		"branch-alias": {
+			"dev-1": "1.x-dev"
 		}
 	},
 	"autoload": {
