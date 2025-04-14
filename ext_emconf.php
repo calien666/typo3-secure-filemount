@@ -19,6 +19,9 @@ $EM_CONF[$_EXTKEY] = [
             'secure_downloads' => '',
             'fal_protect' => '',
         ],
+        'suggests' => [
+            'solr' => '12.0.0-13.9.99',
+        ],
     ],
     'state' => 'stable',
     'author' => 'Markus Hofmann',
