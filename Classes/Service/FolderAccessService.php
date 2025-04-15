@@ -75,7 +75,7 @@ final class FolderAccessService
         count(array_diff($groupArray, $datasetGroupArray)) < $groupArrayCount;
     }
 
-    private function findDirectoryAccess(ResourceStorage $storage, string $identifier): ?Folder
+    public function findDirectoryAccess(ResourceStorage $storage, string $identifier): ?Folder
     {
         // we're detecting file
         // to identify possible processed

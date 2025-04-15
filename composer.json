@@ -26,7 +26,11 @@
 		"typo3/testing-framework": "^8.2.7",
 		"saschaegerer/phpstan-typo3": "^1.8",
 		"phpstan/phpstan": "^1.10",
-		"friendsofphp/php-cs-fixer": "^v3.14"
+		"friendsofphp/php-cs-fixer": "^v3.14",
+		"apache-solr-for-typo3/solr": "^12.0 || ^13.0"
+	},
+	"suggest": {
+		"apache-solr-for-typo3/solr": "For indexing files with permission restrictions"
 	},
 	"extra": {
 		"typo3/cms": {

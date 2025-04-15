@@ -37,3 +37,9 @@ include them in your content elements and so on. This extension cares about the
 correct access and answers with 403 - Auth required, if no access is given.
 
 Feel free to add an 403 error handler to your site configuration to handle access.
+
+.. note::
+
+    When using this extension in combination with [EXT:Solr](https://docs.typo3.org/p/apache-solr-for-typo3/solr/main/en-us/)
+    and any file indexing extension indexed files automatically receive their respective access rights
+    and will only be shown in the search results with a valid/the correct login.
