@@ -21,3 +21,8 @@ services:
     tags:
       - name: event.listener
         event: TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent
+
+  Calien\SecureFilemount\EventListener\PreAddModifyDocuments:
+    tags:
+      - name: event.listener
+        event: ApacheSolrForTypo3\Solr\Event\Indexing\BeforeDocumentIsProcessedForIndexingEvent
