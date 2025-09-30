@@ -54,6 +54,11 @@ final class SecureFilemountMiddleware implements MiddlewareInterface
         $searchBasePath = array_shift($pathArray);
         foreach ($storages as $storage) {
             $conf = $storage->getConfiguration();
+
+            if (!array_key_exists('baseUri', $conf)) {
+                continue;
+            }
+
             $basePath = trim((string)$conf['baseUri'], '/');
             if ($searchBasePath === $basePath) {
                 $foundStorage = $storage;

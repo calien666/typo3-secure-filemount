@@ -70,9 +70,9 @@ final class FolderAccessService
 
         // check if the user has a related group or enabled for every login
         $groupArrayCount = count($groupArray);
-        return in_array(-2, $groupArray, true) ||
-        count(array_diff($groupArray, $feUser->getGroupIds())) < $groupArrayCount ||
-        count(array_diff($groupArray, $datasetGroupArray)) < $groupArrayCount;
+        return in_array(-2, $groupArray, true)
+        || count(array_diff($groupArray, $feUser->getGroupIds())) < $groupArrayCount
+        || count(array_diff($groupArray, $datasetGroupArray)) < $groupArrayCount;
     }
 
     public function findDirectoryAccess(ResourceStorage $storage, string $identifier): ?Folder
