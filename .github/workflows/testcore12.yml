@@ -44,7 +44,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Prepare dependencies for TYPO3 v12"
-        run: "Build/Scripts/runTests.sh -t 12 -p ${{ matrix.php-version }} -s composer require typo3/minimal:^12.4"
+        # TYPO3 12.4 has reached its public end of life; its remaining security
+        # advisories are only fixed under ELTS, so composer refuses to install
+        # the affected 12.4 packages. Disable the advisory block for this legacy
+        # build only (the v13 build keeps it enabled).
+        run: |
+          Build/Scripts/runTests.sh -t 12 -p ${{ matrix.php-version }} -s composer config policy.advisories.block false
+          Build/Scripts/runTests.sh -t 12 -p ${{ matrix.php-version }} -s composer require typo3/minimal:^12.4
 
       - name: "Run PHP lint"
         run: "Build/Scripts/runTests.sh -t 12 -p ${{ matrix.php-version }} -s lintPhp"
