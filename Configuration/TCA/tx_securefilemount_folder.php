@@ -18,7 +18,6 @@ return [
             'ignoreRootLevelRestriction' => true,
         ],
         'versioningWS' => false,
-        'searchFields' => '',
     ],
     'inferface' => [
         'showRecordFieldList' => '',

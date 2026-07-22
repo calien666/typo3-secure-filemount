@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Calien\SecureFilemount\Domain\Repository;
 
 use Calien\SecureFilemount\Domain\Model\Folder;
+use Calien\SecureFilemount\Exception\StorageNotFoundException;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
-use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
+use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
@@ -20,11 +21,15 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 final class FolderRepository
 {
+    public function __construct(
+        private readonly StorageRepository $storageRepository
+    ) {}
+
     /**
      * @throws InsufficientFolderAccessPermissionsException
      * @throws Exception
      */
-    public function getFolder(\TYPO3\CMS\Core\Resource\Folder $folder): ?Folder
+    public function getFolder(\TYPO3\CMS\Core\Resource\Folder $folder): Folder
     {
         $db = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_securefilemount_folder');
@@ -62,7 +67,7 @@ final class FolderRepository
      * @throws InsufficientFolderAccessPermissionsException
      * @throws Exception
      */
-    public function findByStorageAndPath(int $storage, string $path): Folder
+    public function findByStorageAndPath(int $storageUid, string $path): Folder
     {
         $db = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_securefilemount_folder');
@@ -70,17 +75,16 @@ final class FolderRepository
             ->select('*')
             ->from('tx_securefilemount_folder')
             ->where(
-                $db->expr()->eq('storage', $db->createNamedParameter($storage, Connection::PARAM_INT)),
+                $db->expr()->eq('storage', $db->createNamedParameter($storageUid, Connection::PARAM_INT)),
                 $db->expr()->eq('folder', $db->createNamedParameter($path))
             );
 
         $result = $statement->executeQuery()->fetchAssociative();
         if ($result === false) {
-            return $this->createFolder($storage, $path);
+            return $this->createFolder($storageUid, $path);
         }
 
-        $resourceStorage = GeneralUtility::makeInstance(ResourceFactory::class)
-            ->getStorageObject($storage);
+        $resourceStorage = $this->getStorage($storageUid);
 
         return new Folder(
             $result['uid'],
@@ -94,10 +98,9 @@ final class FolderRepository
     /**
      * @throws InsufficientFolderAccessPermissionsException
      */
-    public function createFolder(int $storage, string $path): Folder
+    public function createFolder(int $storageUid, string $path): Folder
     {
-        $storage = GeneralUtility::makeInstance(ResourceFactory::class)
-            ->getStorageObject($storage);
+        $storage = $this->getStorage($storageUid);
         $folder = $storage->getFolder($path);
         $newFolderId = StringUtility::getUniqueId('NEW');
         $data['tx_securefilemount_folder'][$newFolderId] = [
@@ -150,9 +153,24 @@ final class FolderRepository
             $result['uid'],
             $result['folder'],
             $result['folder_hash'],
-            GeneralUtility::makeInstance(ResourceFactory::class)
-                ->getStorageObject($result['storage']),
+            $this->getStorage((int)$result['storage']),
             $result['fe_groups']
         );
+    }
+
+    /**
+     * @throws StorageNotFoundException
+     */
+    private function getStorage(int $uid): ResourceStorage
+    {
+        $storage = $this->storageRepository->findByUid($uid);
+        if (!$storage instanceof ResourceStorage) {
+            throw new StorageNotFoundException(
+                sprintf('File storage with uid %d was not found.', $uid),
+                1753154000
+            );
+        }
+
+        return $storage;
     }
 }

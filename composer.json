@@ -35,7 +35,11 @@
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "secure_filemount"
+      "extension-key": "secure_filemount",
+      "version": "3.0.0",
+      "Package": {
+        "providesPackages": {}
+      }
     },
     "branch-alias": {
       "dev-main": "3.0.x-dev"

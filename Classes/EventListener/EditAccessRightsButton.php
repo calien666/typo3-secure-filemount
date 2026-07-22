@@ -8,8 +8,8 @@ use Calien\SecureFilemount\Domain\Repository\FolderRepository;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -57,7 +57,7 @@ final class EditAccessRightsButton
         $editAccessRightsButton = $event->getButtonBar()->makeLinkButton()
             ->setIcon(
                 $this->iconFactory
-                    ->getIcon('actions-lock', Icon::SIZE_SMALL)
+                    ->getIcon('actions-lock', IconSize::SMALL)
             )
             ->setHref(
                 (string)$this->uriBuilder

@@ -120,7 +120,7 @@ final class ItemProvider extends AbstractProvider
 
         return [
             'data-callback-module' => '@calien/secure-filemount/context-menu-actions',
-            'data-folder-record-uid' => $folderRecord ? $folderRecord->getUid() : 0,
+            'data-folder-record-uid' => $folderRecord->getUid(),
             'data-storage' => $this->folder->getStorage()->getUid(),
             'data-folder' => $this->folder->getIdentifier(),
             'data-folder-hash' => $this->folder->getHashedIdentifier(),

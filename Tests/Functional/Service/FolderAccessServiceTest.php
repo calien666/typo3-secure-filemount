@@ -28,9 +28,10 @@ final class FolderAccessServiceTest extends AbstractFolderAccessTestCase
             'anonymous' => $this->actAsAnonymous(),
             'backend' => $this->actAsBackendUser(),
             'frontend' => $this->actAsFrontendUser($frontendUserUid, $frontendGroupIds),
+            default => self::fail(sprintf('Unknown login mode "%s".', $loginMode)),
         };
 
-        $storage = $this->get(StorageRepository::class)->findByUid(1);
+        $storage = $this->get(StorageRepository::class)->getStorageObject(1);
 
         self::assertSame(
             $expected,
@@ -100,7 +101,7 @@ final class FolderAccessServiceTest extends AbstractFolderAccessTestCase
     {
         $this->actAsFrontendUser(2, [1]);
 
-        $storage = $this->get(StorageRepository::class)->findByUid(1);
+        $storage = $this->get(StorageRepository::class)->getStorageObject(1);
 
         self::assertTrue(
             $this->get(FolderAccessService::class)->checkResourceAccess($storage, '/secure/fallback/file.txt')
@@ -115,7 +116,7 @@ final class FolderAccessServiceTest extends AbstractFolderAccessTestCase
     {
         $this->actAsFrontendUser(2, [9]);
 
-        $storage = $this->get(StorageRepository::class)->findByUid(1);
+        $storage = $this->get(StorageRepository::class)->getStorageObject(1);
 
         self::assertFalse(
             $this->get(FolderAccessService::class)->checkResourceAccess($storage, '/secure/fallback/file.txt')
