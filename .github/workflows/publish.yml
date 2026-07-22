@@ -16,7 +16,7 @@ jobs:
       contents: write
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: "Verify tag"
         run: |
@@ -60,7 +60,7 @@ jobs:
         run: php ~/.composer/vendor/bin/tailor create-artefact ${{ env.version }} ${{ env.DETECTED_EXTENSION_KEY }}
 
       - name: "Create release and upload artifacts"
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: "[RELEASE] ${{ env.version }}"
           generate_release_notes: true
