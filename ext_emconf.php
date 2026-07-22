@@ -11,8 +11,8 @@ $EM_CONF[$_EXTKEY] = [
     ],
     'constraints' => [
         'depends' => [
-            'typo3' => '12.4.0-13.4.99',
-            'php' => '8.1.0-8.4.99',
+            'typo3' => '13.4.0-14.3.99',
+            'php' => '8.2.0-8.5.99',
         ],
         'conflicts' => [
             'fal_securedownload' => '',
@@ -20,12 +20,12 @@ $EM_CONF[$_EXTKEY] = [
             'fal_protect' => '',
         ],
         'suggests' => [
-            'solr' => '12.0.0-13.9.99',
+            'solr' => '13.0.0-14.9.99',
         ],
     ],
     'state' => 'stable',
     'author' => 'Markus Hofmann',
     'author_email' => 'typo3@calien.de',
     'author_company' => '',
-    'version' => '2.0.0',
+    'version' => '3.0.0',
 ];
