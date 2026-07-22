@@ -1,0 +1,4 @@
+"tx_securefilemount_folder",,,,,
+,"uid","pid","storage","folder","folder_hash","fe_groups"
+,1,0,1,"/secure/restricted/","c1788d1cb3f46a5d71ff536aa29ade9da42f5a2b","1"
+,2,0,1,"/secure/anylogin/","c19c00e0204515e7cdec141f6a43cc41feed6777","-2"
