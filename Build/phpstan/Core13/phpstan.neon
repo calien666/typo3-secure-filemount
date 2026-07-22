@@ -10,7 +10,7 @@ parameters:
 
   paths:
     - ../../../Classes
-    # - ../../../Tests/
+    - ../../../Tests
 
   excludePaths:
     - ../../../.Build
