@@ -1,6 +1,6 @@
 [![Latest Stable Version](https://poser.pugx.org/calien/secure-filemount/v/stable.svg?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
-[![TYPO3 12.4](https://img.shields.io/badge/TYPO3-12.4-green.svg?style=for-the-badge)](https://get.typo3.org/version/12)
-[![TYPO3 13.4](https://img.shields.io/badge/TYPO3-13.3-green.svg?style=for-the-badge)](https://get.typo3.org/version/13)
+[![TYPO3 13.4](https://img.shields.io/badge/TYPO3-13.4-green.svg?style=for-the-badge)](https://get.typo3.org/version/13)
+[![TYPO3 14.3](https://img.shields.io/badge/TYPO3-14.3-green.svg?style=for-the-badge)](https://get.typo3.org/version/14)
 [![License](http://poser.pugx.org/calien/secure-filemount/license?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
 [![Total Downloads](https://poser.pugx.org/calien/secure-filemount/downloads.svg?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
 [![Monthly Downloads](https://poser.pugx.org/calien/secure-filemount/d/monthly?style=for-the-badge)](https://packagist.org/packages/calien/secure-filemount)
