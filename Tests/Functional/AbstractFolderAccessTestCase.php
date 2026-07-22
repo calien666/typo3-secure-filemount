@@ -21,6 +21,12 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  */
 abstract class AbstractFolderAccessTestCase extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = [
+        'backend',
+        'filelist',
+        'frontend',
+    ];
+
     protected array $testExtensionsToLoad = [
         'calien/secure-filemount',
     ];

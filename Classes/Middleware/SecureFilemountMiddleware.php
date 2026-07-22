@@ -13,6 +13,7 @@ use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Stream;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Routing\SiteRouteResult;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -76,6 +77,10 @@ final class SecureFilemountMiddleware implements MiddlewareInterface
             }
 
             $file = $foundStorage->getFile($identifier);
+            if (!$file instanceof File) {
+                return $handler->handle($request);
+            }
+
             $stream = new Stream($file->getForLocalProcessing());
             $mime = $file->getMimeType();
             if (array_key_exists($file->getExtension(), $this->mimeTypeMappings)) {
