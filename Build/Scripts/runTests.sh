@@ -215,18 +215,18 @@ Options:
             - 15    maintained until 2027-11-11
             - 16    maintained until 2028-11-09
 
-    -t <12|13>
-        Only with -s composerInstall|composerInstallMin|composerInstallMax
+    -t <13|14>
+        Only with -s composerUpdate
         Specifies the TYPO3 CORE Version to be used
-            - 12: (default) use TYPO3 v12
-            - 13: use TYPO3 v13
+            - 13: (default) use TYPO3 v13
+            - 14: use TYPO3 v14
 
-    -p <8.1|8.2|8.3|8.4>
+    -p <8.2|8.3|8.4|8.5>
         Specifies the PHP minor version to be used
-            - 8.1: use PHP 8.1
             - 8.2: (default) use PHP 8.2
             - 8.3: use PHP 8.3
             - 8.4: use PHP 8.4
+            - 8.5: use PHP 8.5
 
     -x
         Only with -s functional|unit|unitRandom
@@ -293,7 +293,7 @@ fi
 
 # Option defaults
 TEST_SUITE="unit"
-CORE_VERSION="12"
+CORE_VERSION="13"
 DBMS="sqlite"
 PHP_VERSION="8.2"
 PHP_XDEBUG_ON=0
@@ -333,13 +333,13 @@ while getopts "a:b:s:d:i:p:t:xy:o:nhu" OPT; do
             ;;
         p)
             PHP_VERSION=${OPTARG}
-            if ! [[ ${PHP_VERSION} =~ ^(8.1|8.2|8.3|8.4)$ ]]; then
+            if ! [[ ${PHP_VERSION} =~ ^(8.2|8.3|8.4|8.5)$ ]]; then
                 INVALID_OPTIONS+=("p ${OPTARG}")
             fi
             ;;
         t)
             CORE_VERSION=${OPTARG}
-            if ! [[ ${CORE_VERSION} =~ ^(12|13)$ ]]; then
+            if ! [[ ${CORE_VERSION} =~ ^(13|14)$ ]]; then
                 INVALID_OPTIONS+=("t ${OPTARG}")
             fi
             ;;
@@ -385,7 +385,7 @@ fi
 
 handleDbmsOptions
 
-COMPOSER_ROOT_VERSION="2.x.x-dev"
+COMPOSER_ROOT_VERSION="3.0.x-dev"
 CONTAINER_INTERACTIVE="-it --init"
 HOST_UID=$(id -u)
 USERSET=""
@@ -472,9 +472,9 @@ fi
 case ${TEST_SUITE} in
     cgl)
         if [ "${CGLCHECK_DRY_RUN}" -eq 1 ]; then
-            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix --config Build/php-cs-fixer/php-cs-rules.php -v --dry-run --using-cache no --diff"
+            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix --config Build/php-cs-fixer/config.php -v --dry-run --using-cache no --diff"
         else
-            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix --config Build/php-cs-fixer/php-cs-rules.php --using-cache no"
+            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix --config Build/php-cs-fixer/config.php --using-cache no"
         fi
         ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name cgl-${SUFFIX} -e COMPOSER_CACHE_DIR=.Build/.cache/composer -e COMPOSER_ROOT_VERSION=${COMPOSER_ROOT_VERSION} ${IMAGE_PHP} /bin/sh -c "${COMMAND}"
         SUITE_EXIT_CODE=$?
@@ -519,9 +519,13 @@ case ${TEST_SUITE} in
         SUITE_EXIT_CODE=$?
         ;;
     composerUpdate)
-        COMMAND=(Build/Scripts/composer-for-core-version.sh ${CORE_VERSION})
+        rm -f composer.lock
+        rm -rf .Build/vendor
+        cp composer.json composer.json.orig
+        COMMAND=(composer require --dev "typo3/minimal:^${CORE_VERSION}" --with-all-dependencies --no-progress --no-interaction)
         ${CONTAINER_BIN} run ${CONTAINER_SIMPLE_PARAMS} --name composer-command-${SUFFIX} -e COMPOSER_CACHE_DIR=.Build/.cache/composer -e COMPOSER_ROOT_VERSION=${COMPOSER_ROOT_VERSION} ${IMAGE_PHP} "${COMMAND[@]}"
         SUITE_EXIT_CODE=$?
+        mv composer.json.orig composer.json
         ;;
     functional)
         PHPUNIT_CONFIG_FILE="Build/phpunit/FunctionalTests.xml"

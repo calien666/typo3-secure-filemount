@@ -3,13 +3,11 @@ use PhpCsFixer\Finder;
 use PhpCsFixer\Config;
 
 /**
- *  $ php-cs-fixer fix --config .php-cs-rules.php
- *
- * inside the TYPO3 directory. Warning: This may take up to 10 minutes.
+ *  $ php-cs-fixer fix --config Build/php-cs-fixer/config.php
  *
  * For more information read:
- *     https://www.php-fig.org/psr/psr-2/
- *     https://cs.sensiolabs.org
+ *     https://www.php-fig.org/psr/psr-12/
+ *     https://cs.symfony.com
  */
 if (PHP_SAPI !== 'cli') {
     die('This script supports command line usage only. Please check your command.');
@@ -27,28 +25,27 @@ $finder = Finder::create()
 return (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PHP74Migration' => true,
+        '@PHP7x4Migration' => true,
         'general_phpdoc_annotation_remove' => [
             'annotations' => [
                 'author'
             ]
         ],
         '@DoctrineAnnotation' => true,
-        '@PER' => true,
+        '@PER-CS' => true,
         'array_syntax' => ['syntax' => 'short'],
         'blank_line_after_opening_tag' => true,
-        'braces' => ['allow_single_line_closure' => true],
         'cast_spaces' => ['space' => 'none'],
-        'compact_nullable_typehint' => true,
+        'compact_nullable_type_declaration' => true,
         'concat_space' => ['spacing' => 'one'],
         'declare_equal_normalize' => ['space' => 'none'],
         'dir_constant' => true,
-        'function_typehint_space' => true,
+        'type_declaration_spaces' => true,
         'lowercase_cast' => true,
         'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
         'modernize_types_casting' => true,
         'native_function_casing' => true,
-        'new_with_braces' => true,
+        'new_with_parentheses' => true,
         'no_alias_functions' => true,
         'no_blank_lines_after_phpdoc' => true,
         'no_empty_phpdoc' => true,
