@@ -66,7 +66,7 @@ final class FolderAccessService
         $storageRecord = $storage->getStorageRecord();
         $groupArray = $folderAccess instanceof Folder
             ? $folderAccess->getFeGroups()
-            : GeneralUtility::intExplode(',', $storageRecord['fe_group']);
+            : GeneralUtility::intExplode(',', (string)($storageRecord['fe_groups'] ?? ''), true);
 
         // check if the user has a related group or enabled for every login
         $groupArrayCount = count($groupArray);
