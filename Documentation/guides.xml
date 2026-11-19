@@ -4,11 +4,11 @@
         links-are-relative="true"
 >
     <extension class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
-               project-home="ttps://github.com/calien666/typo3-secure-filemount"
-               project-repository="ttps://github.com/calien666/typo3-secure-filemount"
-               project-issues="ttps://github.com/calien666/typo3-secure-filemount/issues"
+               project-home="https://github.com/calien666/typo3-secure-filemount"
+               project-repository="https://github.com/calien666/typo3-secure-filemount"
+               project-issues="https://github.com/calien666/typo3-secure-filemount/issues"
                edit-on-github-branch="main"
-               edit-on-github="calien/typo3-secure-filemount"
+               edit-on-github="calien666/typo3-secure-filemount"
                typo3-core-preferred="stable"
     />
     <project title="Secure Filemount"
