@@ -16,7 +16,7 @@ jobs:
       contents: write
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: "Verify tag"
         run: |
@@ -28,11 +28,26 @@ jobs:
       - name: "Get version"
         run: echo "version=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
 
+      - name: "Verify VERSION file"
+        run: |
+          if [[ "$(tr -d '[:space:]' < VERSION)" != "${{ env.version }}" ]]; then
+            echo "ERR: VERSION contains \"$(cat VERSION)\", expected \"${{ env.version }}\""
+            exit 1
+          fi
+
       - name: "Get extension key"
         run: echo "DETECTED_EXTENSION_KEY=$(jq -r '.extra."typo3/cms"."extension-key"' composer.json)" >> "$GITHUB_ENV"
 
       - name: "Get comment"
         run: |
+          readonly local releaseCommentPrependBody="$( git tag -l ${{ env.version }} --format '%(contents)' )"
+          if (( $(grep -c . <<<"${releaseCommentPrependBody// }") > 1 )); then
+            {
+              echo 'releaseCommentPrependBody<<EOF'
+              echo "$releaseCommentPrependBody"
+              echo EOF
+            } >> "$GITHUB_ENV"
+          fi
           {
             echo 'terReleaseNotes<<EOF'
             echo "https://github.com/${{ github.repository }}/releases/tag/${{ env.version }}"
@@ -59,14 +74,17 @@ jobs:
       - name: "Create local TER package upload artifact"
         run: php ~/.composer/vendor/bin/tailor create-artefact ${{ env.version }} ${{ env.DETECTED_EXTENSION_KEY }}
 
+      # When a release already exists for the tag, only the files are uploaded.
       - name: "Create release and upload artifacts"
         uses: softprops/action-gh-release@v2
         with:
           name: "[RELEASE] ${{ env.version }}"
+          body: "${{ env.releaseCommentPrependBody }}"
           generate_release_notes: true
           files: |
             tailor-version-artefact/${{ env.DETECTED_EXTENSION_KEY }}_${{ env.version }}.zip
             LICENSE
+            VERSION
           fail_on_unmatched_files: true
 
       - name: "Publish to TER"
