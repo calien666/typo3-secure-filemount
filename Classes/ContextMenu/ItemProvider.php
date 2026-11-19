@@ -12,7 +12,6 @@ use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\FolderInterface;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal
@@ -41,7 +40,8 @@ final class ItemProvider extends AbstractProvider
      * ItemProvider constructor.
      */
     public function __construct(
-        protected ResourceFactory $resourceFactory
+        protected ResourceFactory $resourceFactory,
+        private readonly FolderRepository $folderRepository,
     ) {
         parent::__construct();
         // add own items to the default
@@ -115,8 +115,7 @@ final class ItemProvider extends AbstractProvider
             return [];
         }
 
-        $utility = GeneralUtility::makeInstance(FolderRepository::class);
-        $folderRecord = $utility->getFolder($this->folder);
+        $folderRecord = $this->folderRepository->getFolder($this->folder);
 
         return [
             'data-callback-module' => '@calien/secure-filemount/context-menu-actions',
