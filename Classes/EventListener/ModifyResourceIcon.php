@@ -6,18 +6,20 @@ namespace Calien\SecureFilemount\EventListener;
 
 use Calien\SecureFilemount\Domain\Repository\FolderRepository;
 use TYPO3\CMS\Core\Imaging\Event\ModifyIconForResourcePropertiesEvent;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal
  */
 final class ModifyResourceIcon
 {
+    public function __construct(
+        private readonly FolderRepository $folderRepository,
+    ) {}
+
     public function __invoke(ModifyIconForResourcePropertiesEvent $event): void
     {
         $resource = $event->getResource();
-        $folder = GeneralUtility::makeInstance(FolderRepository::class)
-            ->findFolderByHash($resource->getStorage(), $resource->getHashedIdentifier());
+        $folder = $this->folderRepository->findFolderByHash($resource->getStorage(), $resource->getHashedIdentifier());
         if ($folder === null) {
             return;
         }
